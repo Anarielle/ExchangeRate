@@ -1,0 +1,84 @@
+﻿@model CurrenciesModel
+
+<div class="text-center mb-4">    
+    <h1>Курс валют на сегодня</h1>
+</div>
+
+<table class="table mb-4">
+    <thead>
+        <tr>
+            <th class="col-1" scope="col">Код</th>
+            <th class="col-2" scope="col">Количество</th>
+            <th class="col-5" scope="col">Валюта</th>
+            <th class="col-2" scope="col">Курс ЦБ</th>
+            <th class="col-2" scope="col">Изменение</th>
+        </tr>
+    </thead>
+    <tbody>      
+    @foreach (var currency in Model.Currencies)
+    {
+        <tr>
+            <td>@currency.Key</td>
+            <td>@currency.Value.Nominal</td>
+            <td>
+                <a asp-area="" asp-action="Currency" asp-route-id="@currency.Value.ID">
+            @currency.Value.Name
+                </a>
+             </td>
+                <td>@currency.Value.Value</td>
+           
+            @{
+                double diff = Math.Round(currency.Value.Value - currency.Value.Previous,4);
+                if (diff < 0)
+                {
+                    <td class="text-danger">@diff</td>
+                }
+                else
+                {
+                     <td class="text-success">+@diff</td>
+                }
+            }
+           
+        </tr>
+    }     
+    </tbody>
+</table> 
+
+<nav aria-label="Page navigation example">    
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            @if (Model.Pager.CurrentPage == Model.Pager.StartPage)
+            {
+                <a class="page-link" href="~/Currency/Index?page=@(Model.Pager.EndPage)" aria-label="Next">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            }
+            else
+            {
+                <a class="page-link" href="~/Currency/Index?page=@(Model.Pager.CurrentPage - 1)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            }
+        </li>
+        @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+        {
+                <li class="page-item @(page == Model.Pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="~/Currency/Index?page=@(page)">@(page)</a>
+                </li>
+        }
+        <li class="page-item">
+            @if (Model.Pager.CurrentPage == Model.Pager.EndPage)
+            {
+                <a class="page-link" href="~/Currency/Index?page=@(Model.Pager.StartPage)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            }
+            else
+            {
+                <a class="page-link" href="~/Currency/Index?page=@(Model.Pager.CurrentPage + 1)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            }
+        </li>
+    </ul>    
+</nav>

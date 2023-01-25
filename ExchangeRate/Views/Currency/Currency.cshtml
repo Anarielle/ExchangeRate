@@ -1,0 +1,36 @@
+﻿@model Currency
+
+<div class="text-center mb-4">    
+    <h2>Курс @Model.Name</h2>
+</div>
+
+<table class="table table-bordered align-middle text-center">
+    <thead>
+         <tr>
+             <th scope="col">Цифровой код</th>
+             <th scope="col" colspan="2">Текущий курс</th>
+             <th scope="col">Предыдущий курс</th>
+             <th scope="col">Динамика</th>
+         </tr>
+    </thead>
+    <tbody> 
+       <tr>
+           <td>@Model.NumCode</td>
+           <td>за @Model.Nominal @Model.CharCode</td>
+           <td>@Model.Value</td>
+           <td>@Model.Previous</td>
+            @{
+                double diff = Math.Round(Model.Value - Model.Previous, 4);
+                if (diff < 0)
+                {
+                    <td class="text-danger rowspan="3"">@diff</td>
+                }
+                else
+                {
+                    <td class="text-success rowspan="3"">+@diff</td>
+                }
+            }            
+    </tbody>
+</table> 
+
+
